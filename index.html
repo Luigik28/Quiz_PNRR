@@ -16,7 +16,7 @@
         let answers = {};
         let shuffledAnswers = {};
 
-        function shuffleArray(arr) {
+        function shuffleArray_old(arr) {
             const newArr = [...arr];
             for (let i = newArr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -25,7 +25,12 @@
             return newArr;
         }
 
-        function getShuffledAnswers(questionIndex) {
+        function shuffleArray(arr) {
+            const newArr = [...arr];
+            return newArr;
+        }
+
+        function getShuffledAnswers_old(questionIndex) {
             if (!shuffledAnswers[questionIndex]) {
                 const original = questions[questionIndex].answers;
                 const shuffled = shuffleArray(original);
@@ -35,6 +40,10 @@
                     shuffledAnswers[questionIndex][String.fromCharCode(97 + index)] = originalIndex;
                 });
             }
+            return shuffledAnswers[questionIndex];
+        }
+
+        function getShuffledAnswers(questionIndex) {
             return shuffledAnswers[questionIndex];
         }
 
