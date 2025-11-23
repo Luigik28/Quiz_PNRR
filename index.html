@@ -30,7 +30,7 @@
             return newArr;
         }
 
-        function getShuffledAnswers_old(questionIndex) {
+        function getShuffledAnswers(questionIndex) {
             if (!shuffledAnswers[questionIndex]) {
                 const original = questions[questionIndex].answers;
                 const shuffled = shuffleArray(original);
@@ -40,10 +40,6 @@
                     shuffledAnswers[questionIndex][String.fromCharCode(97 + index)] = originalIndex;
                 });
             }
-            return shuffledAnswers[questionIndex];
-        }
-
-        function getShuffledAnswers(questionIndex) {
             return shuffledAnswers[questionIndex];
         }
 
