@@ -170,11 +170,10 @@
                 } else {
                     wrongAnswers.push({
                         index: idx,
-                        question: q.text,
-                        userAnswer: q.answers[userAnswer],
-                        correctAnswer: q.answers[q.correct_index],
-                        userLabel: Object.keys(getShuffledAnswers(idx)).find(key => getShuffledAnswers(idx)[key] === userAnswer),
-                        correctLabel: Object.keys(getShuffledAnswers(idx)).find(key => getShuffledAnswers(idx)[key] === q.correct_index)
+                        question: q,
+                        userAnswerIndex: userAnswer,
+                        allAnswers: q.answers,
+                        correctIndex: q.correct_index
                     });
                 }
             });
@@ -197,15 +196,47 @@
 
                     ${wrongAnswers.length > 0 ? `
                         <div class="mb-8">
-                            <h2 class="text-2xl font-bold text-red-600 mb-4">Risposte Sbagliate:</h2>
+                            <h2 class="text-2xl font-bold text-red-600 mb-4">📋 Riepilogo Risposte Sbagliate:</h2>
                             <div class="space-y-6">
-                                ${wrongAnswers.map(w => `
-                                    <div class="border-l-4 border-red-500 pl-4 py-2 bg-red-50 rounded">
-                                        <div class="font-semibold text-gray-800 mb-2">Domanda ${w.index + 1}: ${w.question}</div>
-                                        <div class="text-red-700 mb-1"><strong>La tua risposta:</strong> [${w.userLabel}] ${w.userAnswer}</div>
-                                        <div class="text-green-700"><strong>Risposta corretta:</strong> [${w.correctLabel}] ${w.correctAnswer}</div>
-                                    </div>
-                                `).join('')}
+                                ${wrongAnswers.map(w => {
+                                    const labels = ['a', 'b', 'c', 'd'];
+                                    return `
+                                        <div class="border-2 border-red-300 rounded-lg p-4 bg-red-50">
+                                            <div class="font-bold text-lg text-gray-800 mb-3">
+                                                ❌ Domanda ${w.index + 1}: ${w.question.text}
+                                            </div>
+                                            <div class="space-y-2">
+                                                ${w.allAnswers.map((answer, ansIdx) => {
+                                                    const isCorrect = ansIdx === w.correctIndex;
+                                                    const isUserWrong = ansIdx === w.userAnswerIndex;
+                                                    let bgColor = 'bg-white';
+                                                    let borderColor = 'border-gray-300';
+                                                    let textColor = 'text-gray-700';
+                                                    let icon = '';
+                                                    
+                                                    if (isCorrect) {
+                                                        bgColor = 'bg-green-100';
+                                                        borderColor = 'border-green-500';
+                                                        textColor = 'text-green-900';
+                                                        icon = '✅ ';
+                                                    } else if (isUserWrong) {
+                                                        bgColor = 'bg-red-100';
+                                                        borderColor = 'border-red-500';
+                                                        textColor = 'text-red-900';
+                                                        icon = '❌ ';
+                                                    }
+                                                    
+                                                    return `
+                                                        <div class="p-3 rounded border-2 ${borderColor} ${bgColor}">
+                                                            <span class="font-bold ${textColor}">${icon}[${labels[ansIdx]}]</span>
+                                                            <span class="${textColor} ml-2">${answer}</span>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     ` : `
